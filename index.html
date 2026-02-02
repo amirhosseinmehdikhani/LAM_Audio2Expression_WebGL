@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Audio Avatar — LAM WebRender</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background: linear-gradient(180deg, #0f0f1a 0%, #1a1a2e 100%);
+      min-height: 100vh;
+      color: #e2e8f0;
+    }
+    .app {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+    h1 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin: 0 0 1rem 0;
+      color: #f8fafc;
+    }
+    #avatar-container {
+      width: 100%;
+      aspect-ratio: 9 / 16;
+      max-height: 70vh;
+      background: #1e293b;
+      border-radius: 12px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    #avatar-container canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .controls {
+      width: 100%;
+      margin-top: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+      font-family: inherit;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
+    }
+    .btn-primary:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
+    }
+    .btn-primary:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+    .btn-secondary {
+      background: #334155;
+      color: #e2e8f0;
+    }
+    .btn-secondary:hover {
+      background: #475569;
+    }
+    #audio-input {
+      display: none;
+    }
+    .status {
+      font-size: 0.875rem;
+      color: #94a3b8;
+      min-height: 1.5em;
+    }
+    .status.error { color: #f87171; }
+    .status.success { color: #4ade80; }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <h1>Audio Avatar</h1>
+    <div id="avatar-container"></div>
+    <div class="controls">
+      <input type="file" id="audio-input" accept="audio/*,.wav,.mp3,.ogg,.m4a" />
+      <button type="button" id="btn-upload" class="btn btn-primary">
+        Upload audio and convert to expression
+      </button>
+      <p id="status" class="status" aria-live="polite"></p>
+    </div>
+  </div>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+
+</html>

@@ -1,0 +1,6 @@
+node_modules
+build
+demo/asset
+.DS_Store
+package-lock.json
+pnpm-lock.yaml

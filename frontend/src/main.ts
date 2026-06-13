@@ -3,9 +3,11 @@ import { GaussianAvatar, type ExpressionDataSet } from './gaussianAvatar';
 const AVATAR_CONTAINER_ID = 'avatar-container';
 const ASSET_PATH = './asset/arkit/image.zip';
 
-/** Base URL for Audio2Expression API (e.g. http://localhost:8001 when running backend separately). */
+/** Base URL for Audio2Expression API. Empty in dev uses Vite proxy (/api → backend). */
 const getApiBase = (): string => {
-  return (import.meta as unknown as { env?: { VITE_AUDIO2EXPRESSION_API?: string } }).env?.VITE_AUDIO2EXPRESSION_API ?? '';
+  const env = (import.meta as unknown as { env?: { VITE_AUDIO2EXPRESSION_API?: string } }).env
+    ?.VITE_AUDIO2EXPRESSION_API?.trim();
+  return env ?? '';
 };
 
 const setStatus = (message: string, type: 'idle' | 'error' | 'success' = 'idle') => {

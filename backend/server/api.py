@@ -1,9 +1,13 @@
 """
 FastAPI server that wraps LAM_Audio2Expression inference.
-Run from LAM_WebRender root:
-  cd LAM_WebRender && python -m server.api
+Run from backend root:
+  cd backend && python -m server.api
+Or in background:
+  cd backend && nohup python -m server.api &
 Or with uvicorn:
-  cd LAM_WebRender && uvicorn server.api:app --host 0.0.0.0 --port 8001
+  cd backend && uvicorn server.api:app --host 0.0.0.0 --port 8001
+
+Port is configurable via BACKEND_PORT (default 8001) in backend/.env or environment.
 """
 import os
 import sys
@@ -11,6 +15,22 @@ import tempfile
 import json
 import threading
 from pathlib import Path
+
+
+def _load_dotenv() -> None:
+    env_path = Path(__file__).resolve().parent.parent / ".env"
+    if not env_path.is_file():
+        return
+    for line in env_path.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, _, val = line.partition("=")
+        key, val = key.strip(), val.strip().strip('"').strip("'")
+        os.environ.setdefault(key, val)
+
+
+_load_dotenv()
 
 # LAM_Audio2Expression root (sibling of server/)
 LAM_A2E_ROOT = Path(__file__).resolve().parent.parent / "LAM_Audio2Expression"
@@ -54,7 +74,7 @@ app = FastAPI(title="LAM Audio2Expression API", version="0.1.0")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=True,
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -111,4 +131,7 @@ async def audio2expression(audio: UploadFile = File(...)):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8001)
+
+    host = os.environ.get("BACKEND_HOST", "0.0.0.0")
+    port = int(os.environ.get("BACKEND_PORT", "8001"))
+    uvicorn.run(app, host=host, port=port)
